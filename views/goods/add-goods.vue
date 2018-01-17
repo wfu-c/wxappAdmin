@@ -1,19 +1,19 @@
 <style lang="less">
     @import '../../styles/common.less';
-    @import './shop.less';
+    @import './goods.less';
 </style>
 
 <template>
     <div class="add-shop">
         <div class="shop-info-box">
             <div class="">
-                <Form :model="formItem" :label-width="80">
+                <Form :model="goods" :label-width="80">
                     <div class="box">
-                        <FormItem label="商品标题">
-                            <Input v-model="formItem.input"></Input>
+                        <FormItem class="width-33" label="商品标题">
+                            <Input v-model="goods.title" placeholder="30字以内"></Input>
                         </FormItem>
-                        <FormItem label="商品介绍">
-                            <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+                        <FormItem class="width-33" label="商品介绍">
+                            <Input v-model="goods.intro" type="textarea" :autosize="{minRows: 2,maxRows: 8}"  placeholder="请输入商品介绍（不超过15字）"></Input>
                         </FormItem>
                         <FormItem label="商品大图">
                             <div class="img-upload-list" v-for="item in uploadList">
@@ -49,73 +49,81 @@
                             <Modal title="View Image" v-model="visible">
                                 <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
                             </Modal>
+                            <p>正方形 800*800</p>
                         </FormItem>
                         <FormItem label="商品分类">
-                            <CheckboxGroup v-model="formItem.checkbox">
-                                <Checkbox label="Eat"></Checkbox>
-                                <Checkbox label="Sleep"></Checkbox>
-                                <Checkbox label="Run"></Checkbox>
-                                <Checkbox label="Movie"></Checkbox>
+                            <CheckboxGroup v-model="goods.sortcheckbox">
+                                <Checkbox label="裤子"></Checkbox>
+                                <Checkbox label="鞋子"></Checkbox>
+                                <Checkbox label="帽子"></Checkbox>
+                                <Checkbox label="外套"></Checkbox>
                             </CheckboxGroup>
                         </FormItem>
                         <FormItem label="品牌">
-                            <RadioGroup v-model="formItem.radio">
-                                <Radio label="male">Male</Radio>
-                                <Radio label="female">Female</Radio>
+                            <RadioGroup v-model="goods.brandRadio">
+                                <Radio label="Adidas">Adidas</Radio>
+                                <Radio label="tebu">特步</Radio>
                             </RadioGroup>
                         </FormItem>
                         <FormItem label="商品详情">
                             <textarea id="articleEditor"></textarea>
                         </FormItem>
+                        <table></table>
                         <FormItem label="商品参数">
-                            <Input v-model="formItem.input"></Input>
-                            <Input v-model="formItem.input"></Input>
+                            <div class="inline-block">
+                                <Input placeholder="参数名称" v-model="parameterName"></Input>
+                                <p>如：重量</p>
+                            </div>
+                            <div class="inline-block">
+                                <Input placeholder="参数值" v-model="parameterVal"></Input>
+                                <p>如：500g</p>
+                            </div>
                         </FormItem>
-                        <FormItem>
-                            <Row>
-                                <Col span="12">
-                                    <Button type="dashed" long @click="parameterAdd" icon="plus-round">Add item</Button>
-                                </Col>
-                            </Row>
+                        <FormItem class="pull-right">
+                            <Button type="ghost" long @click="parameterAdd" icon="plus-round">添加</Button>
                         </FormItem>
                     </div>
 
                     <div class="box">
                         <FormItem label="商品标题">
-                            <Input v-model="formItem.input"></Input>
+                            <Input v-model="goods.input"></Input>
                         </FormItem>
                         <FormItem label="规格/库存">
                             <ul class="goods-norm">
                                 <li>
                                     <div><label>规格名称</label></div>
-                                    <Input v-model="formItem.input"></Input>
+                                    <Input v-model="goods.norm.name"></Input>
                                 </li>
                                 <li>
                                     <div><label>品牌价</label></div>
-                                    <Input v-model="formItem.input"></Input>
+                                    <Input v-model="goods.norm.priceBefore"></Input>
                                 </li>
                                 <li>
                                     <div><label>折后价</label></div>
-                                    <Input v-model="formItem.input"></Input>
+                                    <Input v-model="goods.norm.price"></Input>
                                 </li>
                                 <li>
                                     <div><label>库存</label></div>
-                                    <Input v-model="formItem.input"></Input>
+                                    <Input v-model="goods.norm.count"></Input>
                                 </li>
                             </ul>
                         </FormItem>
-                        <!-- <FormItem label="物流/其他">
-                            <RadioGroup v-model="formItem.radio">
-                                <p><Radio label="same">统一运费</Radio> <Input v-model="formItem.input"></Input>元，“0”表示包邮</p>
+                        <FormItem label="物流/其他">
+                            <RadioGroup v-model="goods.radio">
+                                <div>
+                                    <Radio label="same">统一运费</Radio>
+                                    <div class="inline-block"><Input v-model="goods.sameFreight"></Input></div>
+                                    <span>元，“0”表示包邮</span>
+                                </div>
                                 <Radio label="different">运费模板</Radio>
                             </RadioGroup>
-                            <p>每人限购 <InputNumber :max="1000" :min="0" v-model="value1"></InputNumber><span>不填或者"0"表示不限购</span></p>
-                        </FormItem> -->
+                            <p>每人限购 <InputNumber :max="1000" :min="0" v-model="goods.limitnum"></InputNumber><span>不填或者"0"表示不限购</span></p>
+                        </FormItem>
                     </div>
                     
-                    <FormItem>
-                        <Button type="primary">Submit</Button>
-                        <Button type="ghost" style="margin-left: 8px">Cancel</Button>
+                    <FormItem class="pull-right">
+                        <Button type="primary">提交</Button>
+                        <Button type="ghost" style="margin-left: 8px">取消</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -129,19 +137,23 @@ import tinymce from 'tinymce';
 export default {
     data () {
         return {
-            formItem: {
-                input: '',
-                textarea: '',
-                select: '',
-                radio: 'male',
-                checkbox: [],
-                switch: true,
-                date: '',
-                time: '',
-                slider: [20, 50],
-                textarea: ''
+            goods: {
+                title: '',
+                intro: '',
+                brandRadio: 'Adidas',
+                sortcheckbox: [],
+                parameter:[],
+                norm:{
+                    name: '',
+                    priceBefore: '',
+                    price: '',
+                    count: ''
+                },
+                limitnum: 0,
+                sameFreight:''
             },
-            index: 1,
+            parameterName: '',
+            parameterVal: '',
             formDynamic: {
                 items: [
                     {
@@ -206,12 +218,7 @@ export default {
             return check;
         },
         parameterAdd () {
-            this.index++;
-            this.formDynamic.items.push({
-                value: '',
-                index: this.index,
-                status: 1
-            });
+            
         },
         parameterRemove (index) {
             this.formDynamic.items[index].status = 0;

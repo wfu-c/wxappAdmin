@@ -1,10 +1,10 @@
 <style lang="less">
     @import '../../styles/common.less';
-    @import './shop.less';
+    @import './goods.less';
 </style>
 
 <template>
-    <div class="shop">
+    <div class="shop normal-box">
         <div class="page-action-pane">
             <div class="box">
                 <div class="col-xs-4">
@@ -40,14 +40,14 @@
             </div>
         </div>
 
-        <div class="shop-list">
-            <div class="shop-header">
+        <div class="shop-list normal-list">
+            <div class="shop-header normal-header">
                 <h1>商品</h1>
                 <div class="pull-right">
-                    <router-link to="/add-shop"><Button type="primary" icon="plus">添加商品</Button></router-link>
+                    <router-link to="/add-goods"><Button type="primary" icon="plus">添加商品</Button></router-link>
                 </div>
             </div>
-            <div class="shop-content">
+            <div class="shop-content normal-content">
                 <div v-if="shop.length">
 
                 </div>

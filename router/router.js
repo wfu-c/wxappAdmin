@@ -61,7 +61,9 @@ export const otherRouter = {
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: resolve => { require(['@/views/advanced-router/component/order-info.vue'], resolve); } }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: resolve => { require(['@/views/advanced-router/component/shopping-info.vue'], resolve); } }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: resolve => { require(['@/views/message/message.vue'], resolve); } },
-        { path: 'add-shop', title: '添加商品', name: 'shop_add', component: resolve => { require(['@/views/shop/add-shop.vue'], resolve); } }
+        { path: 'add-goods', title: '添加商品', name: 'shop_add', component: resolve => { require(['@/views/goods/add-goods.vue'], resolve); } },
+        { path: 'add-banner', title: '添加广告', name: 'banner_add', component: resolve => { require(['@/views/store/add-banner.vue'], resolve); } },
+        { path: 'add-logistics', title: '添加运费模板', name: 'logistics_add', component: resolve => { require(['@/views/store/add-logistics.vue'], resolve); } }
     ]
 };
 
@@ -89,23 +91,36 @@ export const appRouter = [
         ]
     }, */
     {
-        path: '/shop-list',
+        path: '/goods-list',
         icon: 'bag',
         title: '商品管理',
-        name: 'shop-list',
+        name: 'goods-list',
         component: Main,
         children: [
-            { path: 'list', title: '商品管理', name: 'shop_index', component: resolve => { require(['@/views/shop/shop-list.vue'], resolve); } },
+            { path: 'goods-list', title: '商品管理', name: 'goods_index', component: resolve => { require(['@/views/goods/goods-list.vue'], resolve); } },
         ]
     },
     {
-        path: '/international',
-        icon: 'earth',
-        title: {i18n: 'international'},
-        name: 'international',
+        path: '/store',
+        icon: 'ios-home',
+        title: '商店管理',
+        name: 'store',
         component: Main,
         children: [
-            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: resolve => { require(['@/views/international/international.vue'], resolve); } }
+            { 
+                path: 'banner-list', 
+                title: '广告管理', 
+                icon: 'images',
+                name: 'store_index', 
+                component: resolve => { require(['@/views/store/banner-list.vue'], resolve); } 
+            },
+            { 
+                path: 'logistics-list', 
+                icon: 'android-bus',
+                title: '物流管理', 
+                name: 'logistics_index', 
+                component: resolve => { require(['@/views/store/logistics-list.vue'], resolve); } 
+            }
         ]
     },
     {
